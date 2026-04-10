@@ -15,11 +15,3 @@
 - [ADDA - هيئة أبوظبي للبيانات](https://adda.gov.ae)
 - [aeCERT - طوارئ الحاسب](https://www.tra.gov.ae/en/about-us/aecert.aspx)
 
-### 🚀 النشر على GitHub Pages
-1. أنشئ مستودعاً جديداً
-2. ارفع ملف `index.html` (غيّر اسم الملف)
-3. من Settings → Pages → اختر main branch
-4. الرابط: `https://username.github.io/repo-name`
-
-### 📁 الملفات
-- `cyber_game.html` → ملف اللعبة الكاملة (ملف واحد فقط، لا يحتاج اتصال إنترنت)
