@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛡️ مهمة الدرع السيبراني | مدرسة مدينة الشامخة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #020b18;
+  --bg2: #040f20;
+  --neon: #00d4ff;
+  --neon2: #0066ff;
+  --neon3: #7b2fff;
+  --gold: #ffd700;
+  --danger: #ff3355;
+  --success: #00ff88;
+  --text: #e0f4ff;
+  --muted: rgba(0,212,255,0.5);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  font-family: 'Tajawal', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  direction: rtl;
+}
+
+/* ─── GRID BG ─── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none; z-index: 0;
+}
+
+/* ─── SCANLINES ─── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px
+  );
+  pointer-events: none; z-index: 1;
+}
+
+.screen { position: relative; z-index: 10; }
+
+/* ═══════════════════════════════
+   INTRO SCREEN
+═══════════════════════════════ */
+#intro {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.school-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid rgba(0,212,255,0.3);
+  background: rgba(0,212,255,0.06);
+  padding: 6px 20px; border-radius: 30px;
+  font-size: 13px; color: var(--neon); letter-spacing: 1px;
+  margin-bottom: 32px;
+  animation: fadeSlide 0.6s ease both;
+}
+
+@keyframes fadeSlide {
+  from { opacity:0; transform: translateY(-16px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+.shield-main {
+  width: 120px; height: 140px; position: relative;
+  margin: 0 auto 28px;
+  animation: floatShield 3s ease-in-out infinite, fadeSlide 0.6s 0.1s ease both;
+}
+
+.shield-main svg { width:100%; height:100%; filter: drop-shadow(0 0 24px var(--neon)); }
+
+@keyframes floatShield {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+.shield-ring {
+  position: absolute; inset: -20px;
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 50%;
+  animation: spin 8s linear infinite;
+}
+.shield-ring::before {
+  content: '';
+  position: absolute; top: -4px; left: 50%;
+  width: 8px; height: 8px;
+  background: var(--neon); border-radius: 50%;
+  box-shadow: 0 0 12px var(--neon);
+}
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+h1.game-title {
+  font-size: clamp(28px, 6vw, 48px);
+  font-weight: 900;
+  background: linear-gradient(135deg, #fff 30%, var(--neon));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 12px;
+  animation: fadeSlide 0.6s 0.2s ease both; opacity: 0;
+  animation-fill-mode: both;
+}
+
+.game-sub {
+  font-size: 15px; color: rgba(255,255,255,0.6);
+  margin-bottom: 40px;
+  animation: fadeSlide 0.6s 0.3s ease both; opacity: 0; animation-fill-mode: both;
+}
+
+/* stat cards row */
+.stats-row {
+  display: flex; gap: 16px; justify-content: center;
+  flex-wrap: wrap; margin-bottom: 40px;
+  animation: fadeSlide 0.6s 0.4s ease both; opacity: 0; animation-fill-mode: both;
+}
+
+.stat-card {
+  background: rgba(0,212,255,0.06);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 16px; padding: 16px 24px;
+  min-width: 120px; text-align: center;
+}
+.stat-card .num { font-size: 28px; font-weight: 900; color: var(--neon); }
+.stat-card .lbl { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+.btn-start {
+  background: linear-gradient(135deg, var(--neon2), var(--neon));
+  border: none; border-radius: 50px;
+  padding: 16px 52px; font-size: 20px; font-weight: 800;
+  font-family: 'Tajawal', sans-serif;
+  color: #000; cursor: pointer;
+  box-shadow: 0 0 32px rgba(0,212,255,0.4);
+  transition: all 0.2s;
+  animation: fadeSlide 0.6s 0.5s ease both; opacity: 0; animation-fill-mode: both;
+}
+.btn-start:hover { transform: scale(1.05); box-shadow: 0 0 52px rgba(0,212,255,0.7); }
+
+/* ═══════════════════════════════
+   GAME SCREEN
+═══════════════════════════════ */
+#game { display:none; min-height:100vh; padding: 20px 16px 40px; }
+
+/* HUD */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 700px; margin: 0 auto 28px;
+  background: rgba(0,212,255,0.06);
+  border: 1px solid rgba(0,212,255,0.15);
+  border-radius: 50px; padding: 10px 20px;
+}
+
+.hud-left { display: flex; align-items: center; gap: 10px; }
+.hud-score { font-size: 13px; color: var(--muted); }
+.hud-score span { color: var(--gold); font-weight: 800; font-size: 18px; }
+
+.progress-bar {
+  flex: 1; height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px; margin: 0 16px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--neon2), var(--neon));
+  transition: width 0.5s ease;
+  box-shadow: 0 0 8px var(--neon);
+}
+
+.hud-mission { font-size: 13px; color: var(--muted); }
+.hud-mission span { color: #fff; font-weight: 800; }
+
+/* CARD */
+.card-stage {
+  max-width: 680px; margin: 0 auto;
+  perspective: 1200px;
+}
+
+.cyber-card {
+  background: linear-gradient(135deg, rgba(0,15,40,0.95), rgba(0,30,70,0.95));
+  border: 1px solid rgba(0,212,255,0.3);
+  border-radius: 24px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(0,102,255,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+  animation: cardIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  position: relative;
+}
+
+@keyframes cardIn {
+  from { opacity:0; transform: scale(0.85) rotateX(8deg); }
+  to   { opacity:1; transform: scale(1) rotateX(0deg); }
+}
+
+/* scan line effect */
+.cyber-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon), transparent);
+  animation: scanCard 2s ease-in-out infinite;
+  z-index: 2;
+}
+@keyframes scanCard {
+  0%   { top: 0; opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.card-header {
+  background: linear-gradient(135deg, rgba(0,102,255,0.15), rgba(0,212,255,0.08));
+  border-bottom: 1px solid rgba(0,212,255,0.15);
+  padding: 20px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.card-type {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; letter-spacing: 2px;
+  color: var(--neon); text-transform: uppercase;
+}
+.card-type-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--neon);
+  box-shadow: 0 0 8px var(--neon);
+  animation: blink 1.5s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.threat-icon {
+  font-size: 40px;
+  filter: drop-shadow(0 0 12px rgba(255,51,85,0.6));
+  animation: threatPulse 2s ease-in-out infinite;
+}
+@keyframes threatPulse {
+  0%,100%{ transform: scale(1); }
+  50%    { transform: scale(1.1); }
+}
+
+.card-body { padding: 28px 28px 24px; }
+
+.scenario-label {
+  font-size: 11px; color: var(--neon); letter-spacing: 3px;
+  margin-bottom: 10px; opacity: 0.7;
+}
+
+.scenario-text {
+  font-size: 20px; font-weight: 800;
+  line-height: 1.5; color: #fff;
+  margin-bottom: 8px;
+  text-shadow: 0 0 20px rgba(0,212,255,0.3);
+}
+
+.scenario-detail {
+  font-size: 14px; color: rgba(255,255,255,0.6);
+  line-height: 1.7; margin-bottom: 28px;
+  padding: 12px 16px;
+  background: rgba(0,0,0,0.3);
+  border-right: 3px solid rgba(0,212,255,0.4);
+  border-radius: 0 8px 8px 0;
+}
+
+/* CHOICES */
+.choices { display: flex; flex-direction: column; gap: 12px; }
+
+.choice-btn {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px; font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  text-align: right;
+  position: relative; overflow: hidden;
+}
+
+.choice-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--neon2), var(--neon));
+  opacity: 0; transition: opacity 0.25s;
+}
+
+.choice-btn:hover {
+  border-color: rgba(0,212,255,0.5);
+  transform: translateX(-4px);
+  box-shadow: 0 4px 24px rgba(0,102,255,0.2);
+}
+
+.choice-letter {
+  min-width: 34px; height: 34px;
+  border: 1px solid rgba(0,212,255,0.4);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; color: var(--neon);
+  background: rgba(0,212,255,0.08);
+  position: relative; z-index: 1;
+  flex-shrink: 0;
+}
+
+.choice-text { position: relative; z-index: 1; flex: 1; }
+
+.choice-btn.correct {
+  background: rgba(0,255,136,0.12);
+  border-color: var(--success);
+  box-shadow: 0 0 24px rgba(0,255,136,0.25);
+  animation: correctPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+}
+.choice-btn.correct .choice-letter { background: var(--success); color: #000; border-color: var(--success); }
+
+@keyframes correctPop {
+  from { transform: scale(0.97); }
+  to   { transform: scale(1); }
+}
+
+.choice-btn.wrong {
+  background: rgba(255,51,85,0.12);
+  border-color: var(--danger);
+  box-shadow: 0 0 16px rgba(255,51,85,0.2);
+  animation: shake 0.4s ease;
+  pointer-events: none;
+}
+@keyframes shake {
+  0%,100%{ transform: translateX(0); }
+  20%    { transform: translateX(-8px); }
+  40%    { transform: translateX(8px); }
+  60%    { transform: translateX(-5px); }
+  80%    { transform: translateX(5px); }
+}
+.choice-btn.disabled { pointer-events: none; opacity: 0.5; }
+
+/* FEEDBACK */
+.feedback-box {
+  margin-top: 20px;
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: none;
+  animation: feedbackIn 0.4s ease both;
+}
+@keyframes feedbackIn {
+  from { opacity:0; transform: translateY(10px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+.feedback-box.success {
+  background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.3);
+}
+.feedback-box.fail {
+  background: rgba(255,51,85,0.08);
+  border: 1px solid rgba(255,51,85,0.3);
+}
+
+.feedback-header {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 16px; font-weight: 800; margin-bottom: 10px;
+}
+.feedback-body { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.7; }
+
+.uae-link-box {
+  margin-top: 14px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  border: 1px solid rgba(0,212,255,0.15);
+  flex-wrap: wrap;
+}
+.uae-link-label {
+  font-size: 11px; color: var(--neon); letter-spacing: 1px;
+  display: flex; align-items: center; gap: 6px;
+}
+.uae-link-label .flag { font-size: 16px; }
+
+.uae-link-box a {
+  color: var(--neon);
+  text-decoration: none;
+  font-size: 13px; font-weight: 700;
+  border: 1px solid rgba(0,212,255,0.3);
+  padding: 5px 14px; border-radius: 20px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.uae-link-box a:hover {
+  background: var(--neon); color: #000;
+}
+
+.btn-next {
+  margin-top: 20px; width: 100%;
+  background: linear-gradient(135deg, var(--neon2), var(--neon3));
+  border: none; border-radius: 50px;
+  padding: 14px; font-size: 17px; font-weight: 800;
+  font-family: 'Tajawal', sans-serif;
+  color: #fff; cursor: pointer;
+  box-shadow: 0 4px 24px rgba(123,47,255,0.3);
+  transition: all 0.2s;
+  display: none;
+}
+.btn-next:hover { transform: scale(1.02); box-shadow: 0 6px 32px rgba(123,47,255,0.5); }
+
+/* ═══════════════════════════════
+   RESULT SCREEN
+═══════════════════════════════ */
+#result {
+  display: none; min-height: 100vh;
+  align-items: center; justify-content: center;
+  flex-direction: column; text-align: center;
+  padding: 40px 20px;
+}
+
+.result-shield { font-size: 80px; animation: resultBounce 0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes resultBounce {
+  from { opacity:0; transform: scale(0.3) rotate(-20deg); }
+  to   { opacity:1; transform: scale(1) rotate(0deg); }
+}
+
+.result-title {
+  font-size: 32px; font-weight: 900;
+  margin: 16px 0 8px;
+  background: linear-gradient(135deg, var(--gold), #fff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: fadeSlide 0.5s 0.2s both;
+}
+
+.result-sub { font-size: 15px; color: rgba(255,255,255,0.6); margin-bottom: 32px; animation: fadeSlide 0.5s 0.3s both; }
+
+.score-display {
+  font-size: 72px; font-weight: 900; line-height: 1;
+  color: var(--neon);
+  text-shadow: 0 0 40px rgba(0,212,255,0.6);
+  animation: fadeSlide 0.5s 0.15s both;
+}
+.score-label { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+
+.stars { font-size: 36px; margin-bottom: 28px; animation: fadeSlide 0.5s 0.4s both; }
+
+.result-links {
+  background: rgba(0,212,255,0.05);
+  border: 1px solid rgba(0,212,255,0.15);
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  max-width: 500px; width: 100%;
+  animation: fadeSlide 0.5s 0.5s both;
+  text-align: right;
+}
+.result-links h3 {
+  font-size: 14px; color: var(--neon); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.result-links ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.result-links li a {
+  color: rgba(255,255,255,0.8); text-decoration: none;
+  font-size: 13px; display: flex; align-items: center; gap: 8px;
+  transition: color 0.2s;
+}
+.result-links li a:hover { color: var(--neon); }
+.result-links li a::before { content: '←'; color: var(--neon); font-size: 11px; }
+
+.btn-restart {
+  background: linear-gradient(135deg, var(--neon2), var(--neon));
+  border: none; border-radius: 50px;
+  padding: 14px 48px; font-size: 18px; font-weight: 800;
+  font-family: 'Tajawal', sans-serif;
+  color: #000; cursor: pointer;
+  box-shadow: 0 0 32px rgba(0,212,255,0.4);
+  transition: all 0.2s;
+  animation: fadeSlide 0.5s 0.6s both;
+}
+.btn-restart:hover { transform: scale(1.05); }
+
+/* particles */
+.particles { position:fixed; inset:0; pointer-events:none; z-index:5; overflow:hidden; }
+.particle {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: var(--neon);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+/* Responsive */
+@media (max-width:480px) {
+  .card-header { padding: 16px 18px; }
+  .card-body { padding: 20px 18px 18px; }
+  .scenario-text { font-size: 17px; }
+  .choice-btn { padding: 13px 14px; font-size: 14px; }
+  h1.game-title { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+
+<!-- PARTICLES -->
+<div class="particles" id="particles"></div>
+
+<!-- ═══ INTRO SCREEN ═══ -->
+<div id="intro" class="screen">
+  <div class="school-tag">🏫 مدرسة مدينة الشامخة · الأمن السيبراني</div>
+
+  <div class="shield-main">
+    <div class="shield-ring"></div>
+    <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 5 L90 20 L90 55 C90 80 72 100 50 110 C28 100 10 80 10 55 L10 20 Z"
+        fill="url(#sg)" stroke="#00d4ff" stroke-width="1.5"/>
+      <path d="M35 60 L45 72 L67 48" stroke="#00d4ff" stroke-width="4"
+        stroke-linecap="round" stroke-linejoin="round"/>
+      <defs>
+        <linearGradient id="sg" x1="10" y1="5" x2="90" y2="110" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#001a40"/>
+          <stop offset="100%" stop-color="#003380"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <h1 class="game-title">مهمة الدرع السيبراني</h1>
+  <p class="game-sub">اختبر مهاراتك في حماية جهازك من الفيروسات والتهديدات الرقمية</p>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="num">5</div><div class="lbl">مهمة</div></div>
+    <div class="stat-card"><div class="num">🏆</div><div class="lbl">نقاط</div></div>
+    <div class="stat-card"><div class="num">🇦🇪</div><div class="lbl">مصادر إماراتية</div></div>
+  </div>
+
+  <button class="btn-start" onclick="startGame()">🚀 ابدأ المهمة</button>
+</div>
+
+<!-- ═══ GAME SCREEN ═══ -->
+<div id="game" class="screen">
+  <div class="hud">
+    <div class="hud-left">
+      <div class="hud-score">النقاط: <span id="scoreDisplay">0</span></div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="hud-mission">مهمة <span id="missionNum">1</span>/5</div>
+  </div>
+
+  <div class="card-stage">
+    <div class="cyber-card" id="cyberCard">
+      <div class="card-header">
+        <div class="card-type">
+          <div class="card-type-dot"></div>
+          <span id="cardType">تهديد نشط</span>
+        </div>
+        <div class="threat-icon" id="threatIcon">⚠️</div>
+      </div>
+      <div class="card-body">
+        <div class="scenario-label">▸ السيناريو</div>
+        <div class="scenario-text" id="scenarioText">...</div>
+        <div class="scenario-detail" id="scenarioDetail">...</div>
+        <div class="choices" id="choices"></div>
+        <div class="feedback-box" id="feedbackBox">
+          <div class="feedback-header" id="feedbackHeader"></div>
+          <div class="feedback-body" id="feedbackBody"></div>
+          <div class="uae-link-box" id="uaeLinkBox"></div>
+        </div>
+        <button class="btn-next" id="btnNext" onclick="nextMission()">المهمة التالية ←</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RESULT SCREEN ═══ -->
+<div id="result" class="screen" style="display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;text-align:center;">
+  <div class="result-shield" id="resultShield">🛡️</div>
+  <div class="score-display" id="finalScore">0</div>
+  <div class="score-label">من أصل 500 نقطة</div>
+  <div class="result-title" id="resultTitle">أحسنت!</div>
+  <div class="result-sub" id="resultSub">لقد أتممت مهمة الدرع السيبراني</div>
+  <div class="stars" id="resultStars">⭐⭐⭐</div>
+
+  <div class="result-links">
+    <h3>🇦🇪 مصادر الأمن السيبراني الإماراتية</h3>
+    <ul>
+      <li><a href="https://uaecsc.gov.ae" target="_blank">مجلس الأمن السيبراني الإماراتي</a></li>
+      <li><a href="https://tdra.gov.ae" target="_blank">هيئة تنظيم الاتصالات والحكومة الرقمية (TDRA)</a></li>
+      <li><a href="https://desc.gov.ae" target="_blank">مركز دبي للأمن الإلكتروني (DESC)</a></li>
+      <li><a href="https://adda.gov.ae" target="_blank">هيئة أبوظبي للبيانات والذكاء الاصطناعي (ADDA)</a></li>
+      <li><a href="https://www.tra.gov.ae/en/about-us/aecert.aspx" target="_blank">فريق الاستجابة لطوارئ الحاسب - aeCERT</a></li>
+    </ul>
+  </div>
+
+  <button class="btn-restart" onclick="restartGame()">🔄 العب مرة أخرى</button>
+</div>
+
+<script>
+// ─── MISSIONS DATA ───
+const missions = [
+  {
+    id: 1,
+    type: "تهديد: برمجيات ضارة",
+    icon: "🦠",
+    scenario: "رسالة مشبوهة على بريدك المدرسي",
+    detail: "وصلتك رسالة من مرسل مجهول تقول: «لقد ربحت جهاز iPad! اضغط هنا وأدخل بيانات حسابك المدرسي لاستلام جائزتك!» ماذا تفعل؟",
+    choices: [
+      { text: "أضغط على الرابط فوراً لاستلام الجائزة", correct: false },
+      { text: "أحذف الرسالة وأبلّغ المعلم عنها فوراً", correct: true },
+      { text: "أرسل رابط الجائزة لجميع زملائي", correct: false },
+    ],
+    feedback: "ممتاز! هذا النوع من الرسائل يُسمى «التصيّد الإلكتروني» (Phishing). المؤسسات الموثوقة لا تطلب بياناتك عبر الروابط. الحل الصحيح دائماً: الحذف والإبلاغ.",
+    uaeLink: { label: "تعرّف على التصيّد الإلكتروني", site: "مجلس الأمن السيبراني الإماراتي", url: "https://uaecsc.gov.ae" },
+    points: 100
+  },
+  {
+    id: 2,
+    type: "تهديد: فيروس منبثق",
+    icon: "💀",
+    scenario: "نافذة تحذيرية مفاجئة على شاشتك",
+    detail: "أثناء استخدامك للحاسوب المدرسي ظهرت نافذة حمراء تقول: «تحذير! جهازك مصاب بـ 47 فيروساً خطيراً! اضغط الآن لتنظيف جهازك مجاناً!» ماذا تفعل؟",
+    choices: [
+      { text: "أضغط على زر 'تنظيف الآن' في النافذة المنبثقة", correct: false },
+      { text: "أُغلق النافذة بالضغط على X أو من مدير المهام وأبلّغ معلم التقنية", correct: true },
+      { text: "أُعيد تشغيل الجهاز وأضغط على الزر عند الإقلاع", correct: false },
+    ],
+    feedback: "أحسنت! النوافذ المنبثقة التحذيرية هي نفسها الفيروس أو الاحتيال! لا تضغط عليها أبداً. أغلقها من شريط المهام أو بالضغط Alt+F4 وأبلّغ معلم التقنية فوراً.",
+    uaeLink: { label: "اعرف المزيد عن الحماية الرقمية", site: "TDRA الإمارات", url: "https://tdra.gov.ae" },
+    points: 100
+  },
+  {
+    id: 3,
+    type: "تهديد: كلمات المرور",
+    icon: "🔐",
+    scenario: "صديقك يطلب كلمة مرورك",
+    detail: "زميلك المقرّب يقول: «أعطني كلمة مرور حسابك المدرسي لدقيقتين فقط، أريد أن أكمل تمريني بسرعة لأن حسابي لا يعمل!» ماذا تفعل؟",
+    choices: [
+      { text: "أعطيه كلمة المرور لأنه صديقي الموثوق", correct: false },
+      { text: "أرفض وأساعده بإبلاغ المعلم لحل مشكلته", correct: true },
+      { text: "أعطيه كلمة المرور بشرط أن يُغيّرها لاحقاً", correct: false },
+    ],
+    feedback: "صحيح! كلمة المرور سرّك الشخصي، لا تُشاركها مع أحد حتى مع أعز أصدقائك. بدلاً من ذلك، أبلغ المعلم لمساعدة زميلك في حل مشكلته بالطريقة الصحيحة.",
+    uaeLink: { label: "أمان الحسابات الرقمية", site: "مركز دبي للأمن الإلكتروني", url: "https://desc.gov.ae" },
+    points: 100
+  },
+  {
+    id: 4,
+    type: "تهديد: تنزيلات غير آمنة",
+    icon: "⬇️",
+    scenario: "تريد تنزيل برنامج للمشروع المدرسي",
+    detail: "تحتاج لبرنامج لتحرير الصور لمشروعك. وجدت موقعاً غير معروف يعرضه مجاناً بينما سعره الأصلي 200 درهم. الموقع يطلب تعطيل برنامج مكافحة الفيروسات قبل التنزيل. ماذا تفعل؟",
+    choices: [
+      { text: "أُنزّله مجاناً وأُعطّل مكافحة الفيروسات كما طُلب مني", correct: false },
+      { text: "أستخدم بدائل مجانية وآمنة مثل Canva أو أطلب إذن المعلم", correct: true },
+      { text: "أُنزّله لكن بدون تعطيل مكافحة الفيروسات", correct: false },
+    ],
+    feedback: "ممتاز! أي برنامج يطلب منك تعطيل الحماية هو بالتأكيد ضار! استخدم دائماً المواقع الرسمية أو البدائل المجانية الموثوقة مثل Canva وLibreOffice، أو استشر معلمك.",
+    uaeLink: { label: "قائمة المواقع الموثوقة", site: "هيئة أبوظبي للبيانات - ADDA", url: "https://adda.gov.ae" },
+    points: 100
+  },
+  {
+    id: 5,
+    type: "تهديد: إهمال التحديثات",
+    icon: "🔄",
+    scenario: "جهازك يطلب تحديث نظام التشغيل",
+    detail: "أثناء اللعب ظهرت رسالة: «تحديث مهم لأمان Windows متاح الآن». التحديث يحتاج 15 دقيقة وأنت مشغول. ماذا تفعل؟",
+    choices: [
+      { text: "أتجاهل التحديث إلى الأبد لأنه مزعج وبطيء", correct: false },
+      { text: "أُؤجّله لوقت مناسب (مثل الليل) وأُثبّته في أقرب وقت", correct: true },
+      { text: "أحذف رسالة التحديث من الإشعارات", correct: false },
+    ],
+    feedback: "رائع! التحديثات تسدّ الثغرات التي تستغلها الفيروسات. يمكنك تأجيلها لوقت مناسب لكن لا تتجاهلها نهائياً. اضبط جهازك على التحديث التلقائي ليلاً.",
+    uaeLink: { label: "مركز الاستجابة لطوارئ الحاسب", site: "aeCERT الإمارات", url: "https://www.tra.gov.ae/en/about-us/aecert.aspx" },
+    points: 100
+  }
+];
+
+// ─── STATE ───
+let current = 0;
+let score = 0;
+let answered = false;
+
+// ─── PARTICLES ───
+function createParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      animation: particleFloat ${4+Math.random()*6}s ${Math.random()*5}s ease-in-out infinite;
+      opacity: ${0.1+Math.random()*0.3};
+      width: ${2+Math.random()*3}px; height: ${2+Math.random()*3}px;
+    `;
+    container.appendChild(p);
+  }
+}
+
+const style = document.createElement('style');
+style.textContent = `
+@keyframes particleFloat {
+  0%,100% { transform: translateY(0) translateX(0); opacity:0.1; }
+  25%      { transform: translateY(-30px) translateX(15px); opacity:0.4; }
+  50%      { transform: translateY(-60px) translateX(-10px); opacity:0.2; }
+  75%      { transform: translateY(-40px) translateX(20px); opacity:0.3; }
+}`;
+document.head.appendChild(style);
+
+// ─── FUNCTIONS ───
+function startGame() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('game').style.display = 'block';
+  loadMission(0);
+}
+
+function loadMission(idx) {
+  answered = false;
+  const m = missions[idx];
+
+  document.getElementById('missionNum').textContent = idx + 1;
+  document.getElementById('progressFill').style.width = ((idx / missions.length) * 100) + '%';
+  document.getElementById('cardType').textContent = m.type;
+  document.getElementById('threatIcon').textContent = m.icon;
+  document.getElementById('scenarioText').textContent = m.scenario;
+  document.getElementById('scenarioDetail').textContent = m.detail;
+
+  // Re-animate card
+  const card = document.getElementById('cyberCard');
+  card.style.animation = 'none';
+  setTimeout(() => { card.style.animation = 'cardIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both'; }, 10);
+
+  // Render choices
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  const letters = ['أ', 'ب', 'ج'];
+  m.choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `<span class="choice-letter">${letters[i]}</span><span class="choice-text">${c.text}</span>`;
+    btn.onclick = () => handleAnswer(i, c.correct, m);
+    choicesEl.appendChild(btn);
+  });
+
+  // Hide feedback & next
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('btnNext').style.display = 'none';
+}
+
+function handleAnswer(idx, isCorrect, mission) {
+  if (answered) return;
+  answered = true;
+
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach((b, i) => {
+    if (i === idx) {
+      b.classList.add(isCorrect ? 'correct' : 'wrong');
+    } else {
+      b.classList.add('disabled');
+      // Show correct answer
+      if (missions[current].choices[i].correct) b.classList.add('correct');
+    }
+  });
+
+  if (isCorrect) score += mission.points;
+  document.getElementById('scoreDisplay').textContent = score;
+
+  // Feedback
+  const fb = document.getElementById('feedbackBox');
+  const fbHeader = document.getElementById('feedbackHeader');
+  const fbBody = document.getElementById('feedbackBody');
+  const uaeBox = document.getElementById('uaeLinkBox');
+
+  fb.className = 'feedback-box ' + (isCorrect ? 'success' : 'fail');
+  fbHeader.innerHTML = isCorrect
+    ? `<span style="color:#00ff88">✅</span> <span style="color:#00ff88">إجابة صحيحة! +${mission.points} نقطة</span>`
+    : `<span style="color:#ff3355">❌</span> <span style="color:#ff3355">إجابة خاطئة</span>`;
+  fbBody.textContent = mission.feedback;
+
+  uaeBox.innerHTML = `
+    <div class="uae-link-label"><span class="flag">🇦🇪</span> ${mission.uaeLink.site}</div>
+    <a href="${mission.uaeLink.url}" target="_blank">🔗 ${mission.uaeLink.label}</a>
+  `;
+
+  fb.style.display = 'block';
+
+  const btnNext = document.getElementById('btnNext');
+  btnNext.style.display = 'block';
+  btnNext.textContent = current < missions.length - 1 ? 'المهمة التالية ←' : '🏆 عرض النتائج';
+}
+
+function nextMission() {
+  current++;
+  if (current >= missions.length) {
+    showResult();
+  } else {
+    loadMission(current);
+  }
+}
+
+function showResult() {
+  document.getElementById('game').style.display = 'none';
+  const resultEl = document.getElementById('result');
+  resultEl.style.display = 'flex';
+
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('progressFill').style.width = '100%';
+
+  let shield, title, sub, stars;
+  if (score === 500)      { shield='🥇'; title='عبقري الأمن السيبراني!'; sub='حصلت على النتيجة الكاملة! أنت مؤهّل لتكون خبير أمن سيبراني.'; stars='⭐⭐⭐⭐⭐'; }
+  else if (score >= 400)  { shield='🛡️'; title='حارس رقمي ممتاز!'; sub='نتيجة رائعة! مع قليل من المراجعة ستصبح خبيراً.'; stars='⭐⭐⭐⭐'; }
+  else if (score >= 300)  { shield='🔐'; title='على الطريق الصحيح!'; sub='جيد! راجع النصائح وحاول مرة أخرى لتحسين نتيجتك.'; stars='⭐⭐⭐'; }
+  else if (score >= 200)  { shield='⚠️'; title='تحتاج إلى مزيد من التعلّم'; sub='جهازك يحتاج حماية أكبر! اقرأ النصائح وأعد المحاولة.'; stars='⭐⭐'; }
+  else                    { shield='🚨'; title='جهازك في خطر!'; sub='راجع نصائح الأمان جيداً وأعد المحاولة لحماية جهازك.'; stars='⭐'; }
+
+  document.getElementById('resultShield').textContent = shield;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultSub').textContent = sub;
+  document.getElementById('resultStars').textContent = stars;
+}
+
+function restartGame() {
+  current = 0; score = 0; answered = false;
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('scoreDisplay').textContent = '0';
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('game').style.display = 'block';
+  loadMission(0);
+}
+
+// ─── INIT ───
+createParticles();
+</script>
+</body>
+</html>
